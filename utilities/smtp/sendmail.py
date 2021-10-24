@@ -13,6 +13,7 @@ def sendmail(message):
     msg['Subject'] = f'Unauthorised activity detected on Honeypot'
     msg['From'] = "victim1729@gmail.com"
     msg['To'] = "victim1729@gmail.com"
+    print("Writing message.")
     s = smtplib.SMTP("smtp.gmail.com", 587)
     s.starttls()
     s.login("victim1729@gmail.com", password)
@@ -21,3 +22,5 @@ def sendmail(message):
     print("message sent")
     return True
 
+
+# sendmail("this is for testing in linux, dont worry")
