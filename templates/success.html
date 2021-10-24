@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .welcome{
+            float: right;
+            margin-right: 5%;
+            font-size: 35px;
+            font-family: 'Lucida Sans';
+            color:antiquewhite ;
+        }
+
+        .name{
+            margin-right: 5%;
+            font-size: 35px;
+            font-family: 'Lucida Sans';
+            color:antiquewhite ;
+        }
+
+        body{
+            font-family: sans-serif;
+            background: #243b55;
+        }
+
+        .center{
+            position: absolute;
+            top: 53%;
+            left: 50%;
+            padding: 40px;
+            transform: translate(-50%, -50%);
+            background: rgba(212, 200, 200, 0.5);
+            box-sizing: border-box;
+            box-shadow: 0 15px 25px rgba(0,0,0,.6);
+            border-radius: 10px;
+            width: 70%;
+            height: 70%;
+        }
+        button{
+            margin-top: 20px;
+            background: transparent;
+            border: none;
+            color: antiquewhite;
+            font-size: 20px;
+            font-family: 'Lucida Sans';
+        }
+
+        button:hover{
+            filter: brightness(120%) saturate(120%);
+            border-radius: 4px;
+        }
+
+        li{
+            text-decoration: none;
+            list-style-type: none;
+            float: left;
+        }
+
+        ul{
+            margin-top: 30px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <ul>
+        <li class='name'>World Bank</li>
+        <li class="welcome">Welcome {{result[0][1]}}</li>
+    </ul>
+   
+    <div class='center'>
+        <button onclick="openDetails()" id='reveal'>Show details</button>
+        <div id='details'>ok</div>
+    </div>
+    
+</body>
+<script>
+
+    function openDetails(){
+        let a = `
+        <p>{{result}}</p>
+        `
+        document.getElementById("details").innerHTML = a;
+    }
+</script>
+
+</html>

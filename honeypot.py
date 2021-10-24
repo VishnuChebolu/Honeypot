@@ -1,0 +1,40 @@
+from utilities.sendmail import sendmail
+from flask import Flask, render_template, request, jsonify
+import mysql.connector
+connection = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password='vishnu',
+    database='honeypot'
+    )
+cursor = connection.cursor()
+
+# print(sendmail("It shoukd work pls"))
+
+app = Flask(__name__)
+
+
+@app.route('/', methods=['GET'])
+def index():
+    return render_template("login.html")
+
+@app.route("/getmyip", methods=["GET"])
+def get_my_ip():
+    return jsonify({'ip': request.remote_addr})
+
+@app.route("/",methods=["POST"])
+def username_print():
+    input_username = request.form["username"]
+    input_password = request.form["password"]
+    try:
+        cursor.execute(f"select * from user_data where username='{input_username}' and password='{input_password}';")
+    except mysql.connector.errors.ProgrammingError as e:
+        return render_template('failure.html', result=e)  
+    b = cursor.fetchall()
+    if len(b)>0:
+        return render_template("success.html",result=b)
+    else:
+        return render_template('failure.html', result="Credentials Incorrect.")    
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5000)
