@@ -1,4 +1,4 @@
-from utilities.sendmail import sendmail
+# from utilities.sendmail import sendmail
 from flask import Flask, render_template, request, jsonify
 import mysql.connector
 connection = mysql.connector.connect(
@@ -9,7 +9,6 @@ connection = mysql.connector.connect(
     )
 cursor = connection.cursor()
 
-# print(sendmail("It shoukd work pls"))
 
 app = Flask(__name__)
 
