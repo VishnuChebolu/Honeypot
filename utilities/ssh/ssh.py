@@ -100,14 +100,14 @@ class SSHRealm(object):
 
 def getRSAKeys():
   
-    with open(r'/home/kali/.ssh/id_rsa', "rb") as privateBlobFile:
-        privateBlob = privateBlobFile.read()
-        privateKey = keys.Key.fromString(data=privateBlob)
+    with open(r'/home/kali/.ssh/id_rsa', "rb") as privateFile:
+        privateKeyStr = privateFile.read()
+        privateKey = keys.Key.fromString(data=privateKeyStr)
  
  
-    with open(r'/home/kali/.ssh/id_rsa.pub', "rb") as publicBlobFile:
-        publicBlob = publicBlobFile.read()
-        publicKey = keys.Key.fromString(data=publicBlob)
+    with open(r'/home/kali/.ssh/id_rsa.pub', "rb") as publicFile:
+        publicKeyStr = publicFile.read()
+        publicKey = keys.Key.fromString(data=publicKeyStr)
  
  
     return publicKey, privateKey
@@ -119,8 +119,7 @@ if __name__ == "__main__":
  
  
 users = {'admin': b'aaa', 'guest': b'bbb'}
-sshFactory.portal.registerChecker(
-    checkers.InMemoryUsernamePasswordDatabaseDontUse(**users))
+sshFactory.portal.registerChecker(checkers.InMemoryUsernamePasswordDatabaseDontUse(**users))
 pubKey, privKey = getRSAKeys()
 sshFactory.publicKeys = {b'ssh-rsa': pubKey}
 sshFactory.privateKeys = {b'ssh-rsa': privKey}
