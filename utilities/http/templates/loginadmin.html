@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <style>
+        body{
+            font-family: sans-serif;
+            background: #243b55;
+        }
+
+        .adminName{
+            font-size: xx-large;
+            font-family: 'Impact, Haettenschweiler';
+            font-weight: bold;
+            color: bisque;
+        }
+        *{
+            color: bisque;
+        }
+        .formLayout{
+            /* background-color: brown;  */
+            height: 370px; 
+            width: 400px;
+            margin-top: 1%;
+            box-shadow: 1px 1px 18px 2px rgb(141, 157, 158);
+            border-radius: 1.2%;
+        }
+        .login{
+            font-size: xx-large;
+        }
+        .input{
+            width: 250px;
+            height: 40px;
+        }
+        #btn1{
+            margin-bottom: -15px;
+        }
+        #btn2{
+            margin-top: -100px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div style="display: flex;justify-content: flex-start; margin: 1%;"><p class="adminName">Admin Login</p></div>
+    <div style="display: flex;justify-content: center;">
+        <div class="formLayout">            
+            <form action="{{url_for('username_print')}}" method="POST">
+                <center>
+                    <h2 class="login">Login</h2>
+                    <br>
+                    <input class="input" id="btn1" type="text" name="username" class="text-field" placeholder="Username" onfocus="text('btn1', 'uname')" />
+                    <p id='uname' style="opacity: 0;">Username</p>
+                    <input class='input' id="btn2" type="password" name="password" class="text-field" placeholder="Password"  onfocus="text('btn2', 'passwd')"/>    
+                    <p id='passwd' style="opacity: 0;">Password</p>
+                    <button class='input' type='submit'>Log In</button>
+                </center>                
+            </form>
+        </div>
+    </div>
+    <script>
+        function text(id, item){
+            document.getElementById('btn1').style.marginBottom = '0px';
+            element = document.getElementById(id);
+            element['placeholder']= '';
+            uname = document.getElementById(item);
+            uname.style.transform = "translate(-97px,-90px)";
+            uname.style.opacity='1';
+            uname.style.transition='ease-out 0.3s'
+        }
+    </script>
+</body>
+</html>
