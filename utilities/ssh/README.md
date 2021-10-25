@@ -32,6 +32,7 @@ I know that, when I showcase my project with twisted, I get questions like, why 
 ## Authenticating the User - 
 
 <center><img src='auth.png' alt="Authentication process"/></center>
+
 ## Final Steps - 
 
 To run the SSH server, create a twisted.conch.ssh.factory.SSHFactory object. 
