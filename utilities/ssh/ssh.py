@@ -6,7 +6,7 @@ from twisted.cred import portal, checkers
 from twisted.internet import reactor
 from zope.interface import implementer
  
-class SSHDemoProtocol(recvline.HistoricRecvLine):
+class SSHProtocol(recvline.HistoricRecvLine):
     def __init__(self, user):
        self.user = user
  
@@ -63,7 +63,7 @@ class SSHDemoProtocol(recvline.HistoricRecvLine):
         self.terminal.reset()
 
 @implementer(ISession)
-class SSHDemoAvatar(avatar.ConchUser):
+class SSHAvatar(avatar.ConchUser):
      
     def __init__(self, username):
         avatar.ConchUser.__init__(self)
@@ -72,7 +72,7 @@ class SSHDemoAvatar(avatar.ConchUser):
  
  
     def openShell(self, protocol):
-        serverProtocol = insults.ServerProtocol(SSHDemoProtocol, self)
+        serverProtocol = insults.ServerProtocol(SSHProtocol, self)
         serverProtocol.makeConnection(protocol)
         protocol.makeConnection(session.wrapProtocol(serverProtocol))
  
@@ -89,11 +89,11 @@ class SSHDemoAvatar(avatar.ConchUser):
         pass
  
 @implementer(portal.IRealm)
-class SSHDemoRealm(object):
+class SSHRealm(object):
      
     def requestAvatar(self, avatarId, mind, *interfaces):
         if IConchUser in interfaces:
-            return interfaces[0], SSHDemoAvatar(avatarId), lambda: None
+            return interfaces[0], SSHAvatar(avatarId), lambda: None
         else:
             raise NotImplementedError("No supported interfaces found.")
 
@@ -115,7 +115,7 @@ def getRSAKeys():
  
 if __name__ == "__main__":
     sshFactory = factory.SSHFactory()
-    sshFactory.portal = portal.Portal(SSHDemoRealm())
+    sshFactory.portal = portal.Portal(SSHRealm())
  
  
 users = {'admin': b'aaa', 'guest': b'bbb'}
