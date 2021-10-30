@@ -141,7 +141,6 @@ class InMemoryUsernamePasswordDatabaseDontUse:
             return failure.Failure(error.UnauthorizedLogin())
 
     def requestAvatarId(self, credentials):
-        
         print(credentials.username, credentials.password)
         if credentials.username in self.users:
             return defer.maybeDeferred(
@@ -150,8 +149,13 @@ class InMemoryUsernamePasswordDatabaseDontUse:
         else:
             return defer.fail(error.UnauthorizedLogin())
 
+class SSHFactoryRedefined(factory.SSHFactory):
 
-sshFactory = factory.SSHFactory()
+    def buildProtocol(self, addr):
+        print (addr)
+        return factory.SSHFactory.buildProtocol(self, addr)
+
+sshFactory = SSHFactoryRedefined()
 sshFactory.portal = portal.Portal(SSHRealm())
  
 users = {'admin': b'admin', 'adminstrator': b'password', 'root':b'toor'}
