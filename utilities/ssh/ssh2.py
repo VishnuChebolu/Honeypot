@@ -1,10 +1,12 @@
+from types import CellType
 from twisted.conch import avatar, recvline
 from twisted.conch.interfaces import IConchUser, ISession
 from twisted.conch.ssh import factory, keys, session
 from twisted.conch.insults import insults
-from twisted.cred import portal, checkers
-from twisted.internet import reactor
+from twisted.cred import portal, checkers,error, credentials
+from twisted.internet import reactor, defer
 from zope.interface import implementer
+from twisted.python import failure
  
 class SSHProtocol(recvline.HistoricRecvLine):
     def __init__(self, user):
@@ -93,7 +95,6 @@ class SSHRealm(object):
      
     def requestAvatar(self, avatarId, mind, *interfaces):
         if IConchUser in interfaces:
-            print(avatarId, mind, list(*interfaces))
             return interfaces[0], SSHAvatar(avatarId), lambda: None
         else:
             raise NotImplementedError("No supported interfaces found.")
@@ -118,11 +119,44 @@ if __name__ == "__main__":
     sshFactory = factory.SSHFactory()
     sshFactory.portal = portal.Portal(SSHRealm())
  
+
+
+@implementer(checkers.ICredentialsChecker)
+class InMemoryUsernamePasswordDatabaseDontUse:
+
+    credentialInterfaces = (
+        credentials.IUsernamePassword,
+        credentials.IUsernameHashedPassword,
+    )
+
+    def __init__(self, **users):
+
+        self.users = {x.encode("ascii"): y for x, y in users.items()}
+
+    def addUser(self, username, password):
+        self.users[username] = password
+
+    def _cbPasswordMatch(self, matched, username):
+        if matched:
+            return username
+        else:
+            return failure.Failure(error.UnauthorizedLogin())
+
+    def requestAvatarId(self, credentials):
+        print(credentials.username, credentials.password)
+        if credentials.username in self.users:
+            return defer.maybeDeferred(
+                credentials.checkPassword, self.users[credentials.username]
+            ).addCallback(self._cbPasswordMatch, credentials.username)
+        else:
+            return defer.fail(error.UnauthorizedLogin())
  
 users = {'admin': b'aaa', 'guest': b'bbb'}
-sshFactory.portal.registerChecker(checkers.InMemoryUsernamePasswordDatabaseDontUse(**users))
+sshFactory.portal.registerChecker(InMemoryUsernamePasswordDatabaseDontUse(**users))
 pubKey, privKey = getRSAKeys()
 sshFactory.publicKeys = {b'ssh-rsa': pubKey}
 sshFactory.privateKeys = {b'ssh-rsa': privKey}
 reactor.listenTCP(222, sshFactory)
 reactor.run()
+
+
