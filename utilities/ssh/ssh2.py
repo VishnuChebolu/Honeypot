@@ -115,9 +115,7 @@ def getRSAKeys():
     return publicKey, privateKey
  
  
-if __name__ == "__main__":
-    sshFactory = factory.SSHFactory()
-    sshFactory.portal = portal.Portal(SSHRealm())
+
  
 
 
@@ -143,6 +141,7 @@ class InMemoryUsernamePasswordDatabaseDontUse:
             return failure.Failure(error.UnauthorizedLogin())
 
     def requestAvatarId(self, credentials):
+        
         print(credentials.username, credentials.password)
         if credentials.username in self.users:
             return defer.maybeDeferred(
@@ -150,8 +149,12 @@ class InMemoryUsernamePasswordDatabaseDontUse:
             ).addCallback(self._cbPasswordMatch, credentials.username)
         else:
             return defer.fail(error.UnauthorizedLogin())
+
+
+sshFactory = factory.SSHFactory()
+sshFactory.portal = portal.Portal(SSHRealm())
  
-users = {'admin': b'aaa', 'guest': b'bbb'}
+users = {'admin': b'admin', 'adminstrator': b'password', 'root':b'toor'}
 sshFactory.portal.registerChecker(InMemoryUsernamePasswordDatabaseDontUse(**users))
 pubKey, privKey = getRSAKeys()
 sshFactory.publicKeys = {b'ssh-rsa': pubKey}
