@@ -14,6 +14,3 @@ try:
 except connector.errors.ProgrammingError as e:
     print(e)
 connection.commit()
-
-b = cursor.fetchall()
-print(b)

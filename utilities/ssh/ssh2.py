@@ -1,4 +1,7 @@
-from types import CellType
+import sys
+sys.path.append('/home/kali/Desktop/vishnu/honeypot/database')
+from database.insertDetails import insert
+
 from twisted.conch import avatar, recvline
 from twisted.conch.interfaces import IConchUser, ISession
 from twisted.conch.ssh import factory, keys, session
