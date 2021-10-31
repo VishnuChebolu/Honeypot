@@ -7,7 +7,8 @@ from twisted.cred import portal, checkers,error, credentials
 from twisted.internet import reactor, defer
 from zope.interface import implementer
 from twisted.python import failure
- 
+
+attackerIP = None
 class SSHProtocol(recvline.HistoricRecvLine):
     def __init__(self, user):
        self.user = user
@@ -80,8 +81,7 @@ class SSHAvatar(avatar.ConchUser):
  
  
     def getPty(self, terminal, windowSize, attrs):
-        return None
- 
+        return None 
  
     def execCommand(self, protocol, cmd):
         raise NotImplementedError()
@@ -141,7 +141,7 @@ class InMemoryUsernamePasswordDatabaseDontUse:
             return failure.Failure(error.UnauthorizedLogin())
 
     def requestAvatarId(self, credentials):
-        print(credentials.username, credentials.password)
+        print(credentials.username, credentials.password, attackerIP)
         if credentials.username in self.users:
             return defer.maybeDeferred(
                 credentials.checkPassword, self.users[credentials.username]
@@ -152,7 +152,8 @@ class InMemoryUsernamePasswordDatabaseDontUse:
 class SSHFactoryRedefined(factory.SSHFactory):
 
     def buildProtocol(self, addr):
-        print (addr)
+        global attackerIP
+        attackerIP = addr
         return factory.SSHFactory.buildProtocol(self, addr)
 
 sshFactory = SSHFactoryRedefined()
