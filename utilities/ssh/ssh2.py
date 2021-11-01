@@ -1,10 +1,14 @@
 import sys
+import datetime
+import pytz
+
 
 sys.path.append('/home/kali/Desktop/vishnu/honeypot/')
 sys.path.append('/home/kali/Desktop/vishnu/honeypot/Data')
+sys.path.append('/home/kali/Desktop/vishnu/honeypot/utilities')
 
 from Data.insertDetails import insert
-
+from utilities.smtp.sendmail import sendmail
 from twisted.conch import avatar, recvline
 from twisted.conch.interfaces import IConchUser, ISession
 from twisted.conch.ssh import factory, keys, session
@@ -15,12 +19,16 @@ from zope.interface import implementer
 from twisted.python import failure
 
 attackerIP = None
+pastclients = ['','']
+
 class SSHProtocol(recvline.HistoricRecvLine):
     def __init__(self, user):
        self.user = user
  
     def connectionMade(self):
         recvline.HistoricRecvLine.connectionMade(self)
+        timenow = datetime.datetime.now(pytz.timezone('Asia/Kolkata')).strftime("%d %B %Y %H:%M:%S")
+        print(f'[{timenow}] : Connected to {attackerIP.host}')
         self.terminal.write("Connected to the server via SSH.")
         self.terminal.nextLine()
         self.help()
@@ -32,9 +40,9 @@ class SSHProtocol(recvline.HistoricRecvLine):
     def lineReceived(self, line):
         line = line.strip().decode()
         if line:
-            print(line)
-            f = open('logfile.log', 'w')
-            f.write(line + '\n')
+            # print(line)
+            f = open('logfile.log', 'a')
+            f.write(f"{attackerIP.host}:line + '\n'")
             f.close
             cmdAndArgs = line.split()
             cmd = cmdAndArgs[0]
@@ -136,13 +144,16 @@ class InMemoryUsernamePasswordDatabaseDontUse:
         self.users[username] = password
 
     def _cbPasswordMatch(self, matched, username):
+        pastclients.append(attackerIP)
         if matched:
             return username
         else:
+            if pastclients[-1] == pastclients[-2] == pastclients[-3]:
+                sendmail(f'{attackerIP} is failed to login.\nNo.of Attempts : {pastclients.count(attackerIP)}')
             return failure.Failure(error.UnauthorizedLogin())
 
     def requestAvatarId(self, credentials):
-        print(credentials.username.decode(), credentials.password.decode(), attackerIP.host, attackerIP.port)
+        # print(credentials.username.decode(), credentials.password.decode(), attackerIP.host, attackerIP.port)
         insert(attackerIP.host, 'IPv4', attackerIP.port, credentials.username.decode(), credentials.password.decode())
         if credentials.username in self.users:
             return defer.maybeDeferred(
@@ -158,15 +169,19 @@ class SSHFactoryRedefined(factory.SSHFactory):
         attackerIP = addr
         return factory.SSHFactory.buildProtocol(self, addr)
 
-sshFactory = SSHFactoryRedefined()
-sshFactory.portal = portal.Portal(SSHRealm())
- 
-users = {'admin': b'admin', 'adminstrator': b'password', 'root':b'toor'}
-sshFactory.portal.registerChecker(InMemoryUsernamePasswordDatabaseDontUse(**users))
-pubKey, privKey = getRSAKeys()
-sshFactory.publicKeys = {b'ssh-rsa': pubKey}
-sshFactory.privateKeys = {b'ssh-rsa': privKey}
-reactor.listenTCP(2222, sshFactory)
-reactor.run()
+def startSSH():
+    sshFactory = SSHFactoryRedefined()
+    sshFactory.portal = portal.Portal(SSHRealm())
+    
+    users = {'admin': b'admin', 'adminstrator': b'password', 'root':b'toor'}
+    sshFactory.portal.registerChecker(InMemoryUsernamePasswordDatabaseDontUse(**users))
+    pubKey, privKey = getRSAKeys()
+    sshFactory.publicKeys = {b'ssh-rsa': pubKey}
+    sshFactory.privateKeys = {b'ssh-rsa': privKey}
+    
+    reactor.listenTCP(2222, sshFactory)
+    timenow = datetime.datetime.now(pytz.timezone('Asia/Kolkata')).strftime("%d %B %Y %H:%M:%S")
+    print(f'[{timenow}] : Service SSH started!')
+    reactor.run()
 
 
