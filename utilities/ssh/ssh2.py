@@ -166,7 +166,7 @@ sshFactory.portal.registerChecker(InMemoryUsernamePasswordDatabaseDontUse(**user
 pubKey, privKey = getRSAKeys()
 sshFactory.publicKeys = {b'ssh-rsa': pubKey}
 sshFactory.privateKeys = {b'ssh-rsa': privKey}
-reactor.listenTCP(222, sshFactory)
+reactor.listenTCP(2222, sshFactory)
 reactor.run()
 
 

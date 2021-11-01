@@ -1,6 +1,7 @@
 def insert(ip, version, port, username, password):
-    print('called')
+    # print('called')
     from mysql import connector
+    import pytz
 
     connection = connector.connect(
         host="localhost",
@@ -10,7 +11,7 @@ def insert(ip, version, port, username, password):
         )
     import datetime
     cursor = connection.cursor()
-    time = datetime.datetime.now().strftime("%a, %d %B %Y %H:%M:%S")
+    time = datetime.datetime.now(pytz.timezone('Asia/Kolkata')).strftime("%a, %d %B %Y %H:%M:%S")
     time = str(time)
     try:
         command = f'insert into logs(Time, clientIP, IP_Version, clientPort, Username, Password) values ("{time}", "{ip}", "{version}", {port}, "{username}", "{password}");'
@@ -19,5 +20,5 @@ def insert(ip, version, port, username, password):
     except connector.errors.ProgrammingError as e:
         print(e)
     connection.commit()
-    print('error')
+
 
