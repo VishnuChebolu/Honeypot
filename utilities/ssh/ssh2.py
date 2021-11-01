@@ -1,7 +1,4 @@
-import sys
-sys.path.append('/home/kali/Desktop/vishnu/honeypot/database')
-from database.insertDetails import insert
-
+from Data.insertDetails import insert
 from twisted.conch import avatar, recvline
 from twisted.conch.interfaces import IConchUser, ISession
 from twisted.conch.ssh import factory, keys, session
@@ -144,7 +141,8 @@ class InMemoryUsernamePasswordDatabaseDontUse:
             return failure.Failure(error.UnauthorizedLogin())
 
     def requestAvatarId(self, credentials):
-        print(credentials.username, credentials.password, attackerIP)
+        print(credentials.username.decode(), credentials.password.decode(), attackerIP.host, attackerIP.port)
+        # insert(attackerIP.host, 'IPv4', attackerIP.port, credentials.username.decode(), credentials.password.decode())
         if credentials.username in self.users:
             return defer.maybeDeferred(
                 credentials.checkPassword, self.users[credentials.username]
