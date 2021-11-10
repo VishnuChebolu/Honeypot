@@ -3,7 +3,8 @@ import cowsay
 import pyfiglet
 import time
 import threading
-cowsay.ghostbusters(pyfiglet.figlet_format('HoneyPot')+'\n\n\n  by vishnu')
+pyfiglet.figlet_format('HoneyPot')
+print("\t\tby Vishnu")
 
 
 startSSH()
