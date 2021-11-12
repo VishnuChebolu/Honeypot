@@ -33,6 +33,10 @@ class SSHProtocol(recvline.HistoricRecvLine):
         self.terminal.nextLine()
         self.help()
         self.showPrompt()
+
+    def connectionLost(self, reason):
+        timenow = datetime.datetime.now(pytz.timezone('Asia/Kolkata')).strftime("%d %B %Y %H:%M:%S")
+        print(f'[{timenow}] : Connected terminated at {attackerIP.host}')
  
     def showPrompt(self):
         self.terminal.write("ssh > ")
@@ -108,10 +112,13 @@ class SSHAvatar(avatar.ConchUser):
 class SSHRealm(object):
      
     def requestAvatar(self, avatarId, mind, *interfaces):
-        if IConchUser in interfaces:
-            return interfaces[0], SSHAvatar(avatarId), lambda: None
-        else:
-            raise NotImplementedError("No supported interfaces found.")
+        try:
+            if IConchUser in interfaces:
+                return interfaces[0], SSHAvatar(avatarId), lambda: None
+            else:
+                raise NotImplementedError("No supported interfaces found.")
+        except Exception:
+            pass
 
 
 def getRSAKeys():
