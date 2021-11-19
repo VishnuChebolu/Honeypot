@@ -1,19 +1,5 @@
-quit
-192.168.50.122:line + '
-'192.168.129.122:line + '
-'192.168.129.122:line + '
-'192.168.129.122:line + '
-'192.168.129.122:line + '
-'192.168.129.25:line + '
-'192.168.129.25:line + '
-'192.168.129.25:line + '
-'192.168.129.25:line + '
-'192.168.129.25:line + '
-'192.168.129.25:line + '
-'192.168.129.25:line + '
-'192.168.129.25:line + '
-'192.168.129.25:line + '
-'192.168.129.25:line + '
-'192.168.129.25:line + '
-'192.168.129.25:line + '
-'
+
+IPv4Address(type='TCP', host='192.168.147.122', port=35442) - echo this is testing in python
+IPv4Address(type='TCP', host='192.168.147.122', port=35442) - echo hope it worked
+IPv4Address(type='TCP', host='192.168.147.122', port=35442) - clear
+IPv4Address(type='TCP', host='192.168.147.122', port=35442) - quit

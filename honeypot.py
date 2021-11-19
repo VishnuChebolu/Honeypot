@@ -1,16 +1,15 @@
 #! /usr/bin/env/ python3
-from threading import Thread
 import datetime
 import pytz
 from optparse import OptionParser
 from utilities.ssh.ssh2 import startSSH
+from utilities.http.webserver import run
 import pyfiglet
 
 def getTime():
     return datetime.datetime.now(pytz.timezone('Asia/Kolkata')).strftime("%d %B %Y %H:%M:%S")
 
-def http():
-    print("HTTP should work after threading")
+
 parser = OptionParser(conflict_handler="resolve")
 
 
@@ -34,6 +33,4 @@ if (options.ssh and options.http):
 elif options.ssh:
     startSSH()
 elif options.http:
-    httpThread = Thread(target = http)
-    httpThread.start()
-    print(f'{getTime(): <25} : http')
+    run()

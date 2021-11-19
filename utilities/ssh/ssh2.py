@@ -43,11 +43,9 @@ class SSHProtocol(recvline.HistoricRecvLine):
  
     def lineReceived(self, line):
         line = line.strip().decode()
+        with open("logfile.log","a") as f:
+            f.write(f'\n{attackerIP} - {line}')
         if line:
-            # print(line)
-            f = open('logfile.log', 'a')
-            f.write(f"{attackerIP.host}:line + '\n'")
-            f.close
             cmdAndArgs = line.split()
             cmd = cmdAndArgs[0]
             args = cmdAndArgs[1:]

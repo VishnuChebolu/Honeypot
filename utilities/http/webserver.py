@@ -1,6 +1,8 @@
 # from utilities.sendmail import sendmail
 from flask import Flask, render_template, request, jsonify
 import mysql.connector
+import datetime
+import pytz
 connection = mysql.connector.connect(
     host="localhost",
     user="root",
@@ -35,5 +37,7 @@ def username_print():
     else:
         return render_template('failure.html', result="Credentials Incorrect.")    
 
-if __name__ == '__main__':
+def run():
+    timenow = datetime.datetime.now(pytz.timezone('Asia/Kolkata')).strftime("%d %B %Y %H:%M:%S")
+    print(f'[{timenow}] : Started HTTP Webserver on port 5500.')
     app.run(debug=True, host='0.0.0.0', port=5500)
