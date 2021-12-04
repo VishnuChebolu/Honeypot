@@ -1,6 +1,7 @@
 import sys
 import datetime
 import pytz
+import os
 
 
 sys.path.append('/home/kali/Desktop/vishnu/honeypot/')
@@ -29,6 +30,7 @@ class SSHProtocol(recvline.HistoricRecvLine):
         recvline.HistoricRecvLine.connectionMade(self)
         timenow = datetime.datetime.now(pytz.timezone('Asia/Kolkata')).strftime("%d %B %Y %H:%M:%S")
         print(f'[{timenow}] : Connected to {attackerIP.host}')
+        osdetected = os.system(f"sudo python3 /home/kali/Desktop/vishnu/honeypot/OSFingerprinting/fingerprint.py '{attackerIP.host}'")
         self.terminal.write("Connected to the server via SSH.")
         self.terminal.nextLine()
         self.help()

@@ -3,3 +3,7 @@ IPv4Address(type='TCP', host='192.168.147.122', port=35442) - echo this is testi
 IPv4Address(type='TCP', host='192.168.147.122', port=35442) - echo hope it worked
 IPv4Address(type='TCP', host='192.168.147.122', port=35442) - clear
 IPv4Address(type='TCP', host='192.168.147.122', port=35442) - quit
+IPv4Address(type='TCP', host='192.168.165.25', port=11661) - whoami
+IPv4Address(type='TCP', host='192.168.165.25', port=11661) - quit
+IPv4Address(type='TCP', host='192.168.165.25', port=12630) - whoami
+IPv4Address(type='TCP', host='192.168.165.25', port=12630) - quit

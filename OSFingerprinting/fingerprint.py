@@ -13,11 +13,19 @@
 
 
 import nmap
+import datetime
+import pytz
+import sys
+
 
 scanner = nmap.PortScanner()
+def getOS(ip):
+    a = scanner.scan(ip, arguments="-O")['scan'][ip]['osmatch']
+    timenow = datetime.datetime.now(pytz.timezone('Asia/Kolkata')).strftime("%d %B %Y %H:%M:%S")
+    print(f'[{timenow}] : Trying the fingerprint the OS of the client.')
+    os = a[0]['osclass'][0]['osfamily']
+    timenow = datetime.datetime.now(pytz.timezone('Asia/Kolkata')).strftime("%d %B %Y %H:%M:%S")
+    print(f'[{timenow}] : Detected {os} operating system.')
+    return (a[0]['osclass'][0]['osfamily'])
 
-ip = input("Enter an IP to perform OS fingerprinting attack : ")
-
-a = scanner.scan(ip, arguments="-O")['scan'][ip]['osmatch']
-# print(a)
-print(a[0]['osclass'][0]['osfamily'])
+getOS(sys.argv[1])
